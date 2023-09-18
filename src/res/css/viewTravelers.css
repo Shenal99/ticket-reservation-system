@@ -1,0 +1,40 @@
+/* view-travelers.css */
+
+.view-travelers-container {
+    background-color: #f8f8f8;
+    padding: 20px;
+    min-height: 100vh;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th,
+  td {
+    padding: 10px;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #343a40;
+    color: #fff;
+  }
+  
+  .status {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+  }
+  
+  .active {
+    background-color: #28a745;
+    color: #fff;
+  }
+  
+  .inactive {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
