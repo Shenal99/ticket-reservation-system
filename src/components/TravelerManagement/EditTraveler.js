@@ -114,6 +114,19 @@ export default function EditTraveler() {
                 required
               />
             </div>
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                type="text"
+                name="password"
+                className="form-control"
+                value={traveler.pwrd}
+                onChange={(e) =>
+                  setTraveler({ ...traveler, pwrd: e.target.value })
+                }
+                required
+              />
+            </div>
             <button type="submit" className="btn btn-primary">Update Traveler</button>
           </form>
         </div>

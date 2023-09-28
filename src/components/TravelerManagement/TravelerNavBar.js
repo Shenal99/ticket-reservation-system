@@ -34,7 +34,7 @@ export default function NavBar() {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/create-traveler">
+              <Link className="nav-link" to="/traveler/activation">
                 <i className="fas fa-user-plus"></i> Account Activation
               </Link>
             </li>
