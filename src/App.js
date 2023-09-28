@@ -7,6 +7,7 @@ import LoginPage from "./components/LoginPage";
 import HomePage from "./components/HomePage";
 import CreateTraveler from "./components/TravelerManagement/CreateTraveler";
 import ViewTravelers from "./components/TravelerManagement/ViewTravelers";
+import EditTraveler from "./components/TravelerManagement/EditTraveler";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/traveler/create" element={<CreateTraveler />} />
           <Route path="/traveler/view" element={<ViewTravelers />} />
+          <Route path="/traveler/edit/:id" element={<EditTraveler />} />
         </Routes>
       </Router>
   );

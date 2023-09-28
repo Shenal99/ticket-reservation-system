@@ -10,7 +10,7 @@
   }
   
   .create-traveler-form {
-    max-width: 500px;
+    width: 500px;
     padding: 30px;
     background-color: #fff;
     border-radius: 8px;
@@ -25,10 +25,6 @@
   .form-group {
     margin-bottom: 25px;
   }
-
-  .form-group label {
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-}
   
   .form-control {
     width: 100%;

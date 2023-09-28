@@ -28,7 +28,7 @@ export default function CustomAppBar() {
             className="home-icon"
           />
         </Link>
-        <h1>Ticket Reservation System</h1>
+        <h2>Ticket Reservation System</h2>
         <div className="profile-icon" onClick={toggleDropdown}>
           <img
             src={require("../res/images/prof.png")}
