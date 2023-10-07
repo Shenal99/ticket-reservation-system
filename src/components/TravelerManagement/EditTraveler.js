@@ -58,8 +58,8 @@ export default function EditTraveler() {
     <>
       <CustomAppBar />
       <NavBar />
-      <div className="create-traveler-container"> 
-        <div className="create-traveler-form"> 
+      <div className="create-traveler-container">
+        <div className="create-traveler-form">
           <h2>Edit Traveler</h2>
           <form onSubmit={updateTraveler}>
             <div className="form-group">

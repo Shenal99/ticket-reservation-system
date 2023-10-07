@@ -64,10 +64,10 @@ export default function ViewTravelers() {
 
   return (
     <>
-      <CustomAppBar />
-      <NavBar />
-      <div className="view-travelers-container">
-        <div className="container mt-5">
+      <div className="view-travelers-container train-background">
+        <CustomAppBar />
+        <NavBar />
+        <div className="container mt-5" style={{ backgroundColor: 'white', padding: '15px' }}>
           <h2>View Travelers</h2>
           {/* Search fields next to each other */}
           <div className="row">
@@ -110,9 +110,8 @@ export default function ViewTravelers() {
                   <td>{traveler.phone}</td>
                   <td>
                     <span
-                      className={`status ${
-                        traveler.status ? "active" : "inactive"
-                      }`}
+                      className={`status ${traveler.status ? "active" : "inactive"
+                        }`}
                     >
                       {traveler.status ? "Active" : "Inactive"}
                     </span>

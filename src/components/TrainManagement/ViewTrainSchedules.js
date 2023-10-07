@@ -12,12 +12,12 @@ export default function ViewTrainSchedules() {
   const [startQuery, setStartQuery] = useState("");
   const [endQuery, setEndQuery] = useState("");
 
-//   useEffect(() => {
-//     // Fetch the list of train schedules from your API
-//     axios.get("https://localhost:7173/api/TrainSchedules").then((response) => {
-//       setSchedules(response.data);
-//     });
-//   }, []);
+  //   useEffect(() => {
+  //     // Fetch the list of train schedules from your API
+  //     axios.get("https://localhost:7173/api/TrainSchedules").then((response) => {
+  //       setSchedules(response.data);
+  //     });
+  //   }, []);
 
   const handleDeleteSchedule = (id) => {
     // Use SweetAlert for delete confirmation
@@ -64,84 +64,85 @@ export default function ViewTrainSchedules() {
 
   return (
     <>
-      <CustomAppBar />
-      <NavBar />
-      <div className="view-train-schedules-container">
-        <div className="container mt-5">
-          <h2>View Train Schedules</h2>
-          {/* Search fields next to each other */}
-          <div className="row">
-            <div className="col-md-4">
-              <input
-                type="text"
-                className="form-control small-input"
-                placeholder="Search by Name"
-                value={nameQuery}
-                onChange={(e) => setNameQuery(e.target.value)}
-              />
+      <div className="train-background">
+        <CustomAppBar />
+        <NavBar />
+        <div className="view-train-schedules-container">
+          <div className="container mt-5" style={{ backgroundColor: 'white', padding: '15px' }}>
+            <h2>View Train Schedules</h2>
+            {/* Search fields next to each other */}
+            <div className="row">
+              <div className="col-md-4">
+                <input
+                  type="text"
+                  className="form-control small-input"
+                  placeholder="Search by Name"
+                  value={nameQuery}
+                  onChange={(e) => setNameQuery(e.target.value)}
+                />
+              </div>
+              <div className="col-md-4">
+                <input
+                  type="text"
+                  className="form-control small-input"
+                  placeholder="Search by Start Destination"
+                  value={startQuery}
+                  onChange={(e) => setStartQuery(e.target.value)}
+                />
+              </div>
+              <div className="col-md-4">
+                <input
+                  type="text"
+                  className="form-control small-input"
+                  placeholder="Search by End Destination"
+                  value={endQuery}
+                  onChange={(e) => setEndQuery(e.target.value)}
+                />
+              </div>
             </div>
-            <div className="col-md-4">
-              <input
-                type="text"
-                className="form-control small-input"
-                placeholder="Search by Start Destination"
-                value={startQuery}
-                onChange={(e) => setStartQuery(e.target.value)}
-              />
-            </div>
-            <div className="col-md-4">
-              <input
-                type="text"
-                className="form-control small-input"
-                placeholder="Search by End Destination"
-                value={endQuery}
-                onChange={(e) => setEndQuery(e.target.value)}
-              />
-            </div>
-          </div>
-          <table className="table table-striped">
-            <thead className="thead-dark">
-              <tr>
-                <th>Name</th>
-                <th>Start Destination</th>
-                <th>End Destination</th>
-                <th>Start Time</th>
-                <th>End Time</th>
-                <th>Date</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredSchedules.map((schedule) => (
-                <tr key={schedule.id}>
-                  <td>{schedule.name}</td>
-                  <td>{schedule.startDestination}</td>
-                  <td>{schedule.endDestination}</td>
-                  <td>{schedule.startTime}</td>
-                  <td>{schedule.endTime}</td>
-                  <td>{schedule.date}</td>
-                  <td>
-                    <span
-                      className={`status ${
-                        schedule.status ? "active" : "inactive"
-                      }`}
-                    >
-                      {schedule.status ? "Active" : "Inactive"}
-                    </span>
-                  </td>
-                  <td>
-                    <FontAwesomeIcon icon={faEdit} className="edit-icon" />
-                    <FontAwesomeIcon
-                      icon={faTrash}
-                      className="delete-icon"
-                      onClick={() => handleDeleteSchedule(schedule.id)}
-                    />
-                  </td>
+            <table className="table table-striped">
+              <thead className="thead-dark">
+                <tr>
+                  <th>Name</th>
+                  <th>Start Destination</th>
+                  <th>End Destination</th>
+                  <th>Start Time</th>
+                  <th>End Time</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filteredSchedules.map((schedule) => (
+                  <tr key={schedule.id}>
+                    <td>{schedule.name}</td>
+                    <td>{schedule.startDestination}</td>
+                    <td>{schedule.endDestination}</td>
+                    <td>{schedule.startTime}</td>
+                    <td>{schedule.endTime}</td>
+                    <td>{schedule.date}</td>
+                    <td>
+                      <span
+                        className={`status ${schedule.status ? "active" : "inactive"
+                          }`}
+                      >
+                        {schedule.status ? "Active" : "Inactive"}
+                      </span>
+                    </td>
+                    <td>
+                      <FontAwesomeIcon icon={faEdit} className="edit-icon" />
+                      <FontAwesomeIcon
+                        icon={faTrash}
+                        className="delete-icon"
+                        onClick={() => handleDeleteSchedule(schedule.id)}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </>

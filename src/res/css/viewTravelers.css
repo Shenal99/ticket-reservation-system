@@ -1,10 +1,12 @@
 /* ViewTravelers.css */
 .delete-icon {
-  color: red; /* Make the trash icon red */
+  color: red;
+  /* Make the trash icon red */
   margin-left: 12px;
-  font-size: 20px; /* Add some space between the icons */
+  font-size: 20px;
+  /* Add some space between the icons */
 }
 
-.edit-icon{
+.edit-icon {
   font-size: 20px;
 }

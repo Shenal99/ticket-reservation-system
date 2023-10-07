@@ -26,7 +26,7 @@ export default function CreateTraveler() {
         status: isActive ? 1 : 0,
       });
 
-      if (response.status === 200 || response.status === 201 ) {
+      if (response.status === 200 || response.status === 201) {
         // Use Swal to show a success message
         Swal.fire({
           title: "Success",

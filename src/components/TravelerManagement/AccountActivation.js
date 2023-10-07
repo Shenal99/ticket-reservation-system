@@ -62,10 +62,10 @@ export default function AccountActivation() {
 
   return (
     <>
-      <CustomAppBar />
-      <NavBar />
-      <div className="">
-        <div className="container mt-5">
+      <div className="train-background">
+        <CustomAppBar />
+        <NavBar />
+        <div className="container mt-5" style={{ backgroundColor: 'white', padding: '20px' }}>
           <h2>Account Activation</h2>
           {/* Search fields next to each other */}
           <div className="row">
@@ -93,9 +93,8 @@ export default function AccountActivation() {
                   <td>{traveler.nic}</td>
                   <td>
                     <span
-                      className={`status ${
-                        traveler.status ? "active" : "inactive"
-                      }`}
+                      className={`status ${traveler.status ? "active" : "inactive"
+                        }`}
                     >
                       {traveler.status ? "Active" : "Inactive"}
                     </span>
@@ -103,14 +102,16 @@ export default function AccountActivation() {
                   <td>
                     {traveler.status ? (
                       <button
-                        className="btn btn-danger"
+                        style={{ width: "100px" }}
+                        className="btn btn-danger btn-sm"
                         onClick={() => deactivateTraveler(traveler.id)}
                       >
                         Deactivate
                       </button>
                     ) : (
                       <button
-                        className="btn btn-success"
+                        style={{ width: "100px" }}
+                        className="btn btn-success btn-sm"
                         onClick={() => activateTraveler(traveler.id)}
                       >
                         Activate
