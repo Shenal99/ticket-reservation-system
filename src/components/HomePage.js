@@ -61,7 +61,7 @@ export default function Home() {
               <p className="card-text">
                 Manage train schedules and information.
               </p>
-              <Link to="/train-management" className="btn btn-primary">
+              <Link to="/schedule/create" className="btn btn-primary">
                 Go to Train Management
               </Link>
             </div>
