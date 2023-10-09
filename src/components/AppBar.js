@@ -1,6 +1,6 @@
-// AppBar.js
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import swal from "sweetalert"; // Import SweetAlert
 import "../res/css/appbar.css"; // Customize your app bar CSS
 
 export default function CustomAppBar() {
@@ -12,9 +12,21 @@ export default function CustomAppBar() {
   };
 
   const handleLogout = () => {
-    // Implement your logout logic here
-    alert("Logged out");
-    // You may want to redirect the user to the login page after logging out.
+    // Use SweetAlert for logout confirmation
+    swal({
+      title: "Logout",
+      text: "Are you sure you want to log out?",
+      icon: "warning",
+      buttons: ["Cancel", "Logout"],
+      dangerMode: true,
+    }).then((willLogout) => {
+      if (willLogout) {
+        // User confirmed logout, implement your logout logic here
+        // For example, you can clear user session or token
+        // Redirect the user to the login page
+        window.location.href = "/"; // Replace with your login page route
+      }
+    });
   };
 
   return (

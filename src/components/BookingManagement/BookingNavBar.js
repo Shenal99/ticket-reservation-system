@@ -24,18 +24,18 @@ export default function NavBar() {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
-              <Link className="nav-link" to="/schedule/create">
-                <i className="fas fa-user-plus"></i> Create Schedule
+              <Link className="nav-link" to="/Booking/view">
+                <i className="fas fa-user-plus"></i> View Schedules
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/schedule/view">
-                <i className="fas fa-user-plus"></i> View Schedule
+              <Link className="nav-link" to="">
+                <i className="fas fa-user-plus"></i> Manage Bookings
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/schedule/activation">
-                <i className="fas fa-user-plus"></i> Activate Schedule
+              <Link className="nav-link" to="">
+                <i className="fas fa-user-plus"></i> Activate Booking
               </Link>
             </li>
           </ul>

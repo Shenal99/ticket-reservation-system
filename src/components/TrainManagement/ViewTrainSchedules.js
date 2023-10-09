@@ -5,19 +5,26 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import swal from "sweetalert";
+import { Link } from "react-router-dom"; // Import Link
+import { OverlayTrigger, Tooltip } from "react-bootstrap"; // Import your tooltip component
 
 export default function ViewTrainSchedules() {
   const [schedules, setSchedules] = useState([]);
-  const [nameQuery, setNameQuery] = useState("");
+  const [dateQuery, setDateQuery] = useState("");
   const [startQuery, setStartQuery] = useState("");
   const [endQuery, setEndQuery] = useState("");
 
-  //   useEffect(() => {
-  //     // Fetch the list of train schedules from your API
-  //     axios.get("https://localhost:7173/api/TrainSchedules").then((response) => {
-  //       setSchedules(response.data);
-  //     });
-  //   }, []);
+  useEffect(() => {
+    // Fetch data from your API endpoint
+    axios
+      .get("https://localhost:7173/api/Schedule")
+      .then((response) => {
+        setSchedules(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching schedules:", error);
+      });
+  }, []);
 
   const handleDeleteSchedule = (id) => {
     // Use SweetAlert for delete confirmation
@@ -29,9 +36,9 @@ export default function ViewTrainSchedules() {
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        // User confirmed deletion, send DELETE request
+        // User confirmed deletion, send DELETE request to your API
         axios
-          .delete(`https://localhost:7173/api/TrainSchedules/${id}`)
+          .delete(`https://localhost:7173/api/Schedule/${id}`)
           .then(() => {
             // Remove the deleted schedule from the state
             setSchedules((prevSchedules) =>
@@ -54,10 +61,24 @@ export default function ViewTrainSchedules() {
     });
   };
 
-  // Filter the schedules based on the search queries
+  // Function to truncate station list
+  const truncateStationList = (stationList) => {
+    const maxStationListLength = 3; // Define your maximum visible stations
+    if (stationList.length <= maxStationListLength) {
+      return stationList.map((station) => station.name).join(", ");
+    } else {
+      const truncatedList = stationList
+        .slice(0, maxStationListLength)
+        .map((station) => station.name)
+        .join(", ");
+      return `${truncatedList}...`; // Add an ellipsis to indicate more stations
+    }
+  };
+
+  // Filter the schedules based on the search queries and active status
   const filteredSchedules = schedules.filter(
     (schedule) =>
-      schedule.name.toLowerCase().includes(nameQuery.toLowerCase()) &&
+      schedule.date.toLowerCase().includes(dateQuery.toLowerCase()) &&
       schedule.startDestination.toLowerCase().includes(startQuery.toLowerCase()) &&
       schedule.endDestination.toLowerCase().includes(endQuery.toLowerCase())
   );
@@ -68,17 +89,20 @@ export default function ViewTrainSchedules() {
         <CustomAppBar />
         <NavBar />
         <div className="view-train-schedules-container">
-          <div className="container mt-5" style={{ backgroundColor: 'white', padding: '15px' }}>
+          <div
+            className="container mt-5"
+            style={{ backgroundColor: "white", padding: "15px" }}
+          >
             <h2>View Train Schedules</h2>
             {/* Search fields next to each other */}
             <div className="row">
               <div className="col-md-4">
                 <input
-                  type="text"
+                  type="date"
                   className="form-control small-input"
-                  placeholder="Search by Name"
-                  value={nameQuery}
-                  onChange={(e) => setNameQuery(e.target.value)}
+                  placeholder="Search by Date"
+                  value={dateQuery}
+                  onChange={(e) => setDateQuery(e.target.value)}
                 />
               </div>
               <div className="col-md-4">
@@ -103,12 +127,13 @@ export default function ViewTrainSchedules() {
             <table className="table table-striped">
               <thead className="thead-dark">
                 <tr>
-                  <th>Name</th>
+                  <th>Train Name</th>
                   <th>Start Destination</th>
                   <th>End Destination</th>
-                  <th>Start Time</th>
-                  <th>End Time</th>
+                  <th>Station List</th>
+                  <th>Seats</th>
                   <th>Date</th>
+                  <th>Start Time</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -116,22 +141,45 @@ export default function ViewTrainSchedules() {
               <tbody>
                 {filteredSchedules.map((schedule) => (
                   <tr key={schedule.id}>
-                    <td>{schedule.name}</td>
+                    <td>{schedule.trainName}</td>
                     <td>{schedule.startDestination}</td>
                     <td>{schedule.endDestination}</td>
-                    <td>{schedule.startTime}</td>
-                    <td>{schedule.endTime}</td>
+                    <td>
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={
+                          <Tooltip id={`tooltip-${schedule.id}`}>
+                            <div style={{ maxWidth: "300px" }}>
+                              <strong>Station List:</strong>
+                              <br />
+                              {schedule.stationList.map((station) => (
+                                <div key={station.name}>{station.name}</div>
+                              ))}
+                            </div>
+                          </Tooltip>
+                        }
+                      >
+                        <span className="station-list-truncate">
+                          {truncateStationList(schedule.stationList)}
+                        </span>
+                      </OverlayTrigger>
+                    </td>
+                    <td>{schedule.seats}</td>
                     <td>{schedule.date}</td>
+                    <td>{schedule.startTime}</td>
                     <td>
                       <span
-                        className={`status ${schedule.status ? "active" : "inactive"
-                          }`}
+                        className={`status ${
+                          schedule.status ? "active" : "inactive"
+                        }`}
                       >
                         {schedule.status ? "Active" : "Inactive"}
                       </span>
                     </td>
                     <td>
-                      <FontAwesomeIcon icon={faEdit} className="edit-icon" />
+                      <Link to={`/train-schedule/edit/${schedule.id}`}>
+                        <FontAwesomeIcon icon={faEdit} className="edit-icon" />
+                      </Link>
                       <FontAwesomeIcon
                         icon={faTrash}
                         className="delete-icon"

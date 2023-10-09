@@ -1,0 +1,15 @@
+.custom-book-button {
+    background-color: #4caf50; /* Green background color */
+    border: none; /* Remove border */
+    color: white; /* White text color */
+    padding: 5px 10px; /* Add some padding */
+    text-align: center; /* Center text */
+    text-decoration: none; /* Remove underline */
+    display: inline-block;
+    font-size: 14px; /* Adjust font size */
+    border-radius: 3px; /* Add rounded corners */
+  }
+
+  .custom-book-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+  }

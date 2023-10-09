@@ -11,6 +11,9 @@ import EditTraveler from "./components/TravelerManagement/EditTraveler";
 import AccountActivation from "./components/TravelerManagement/AccountActivation";
 import CreateTrainSchedule from "./components/TrainManagement/CreateTrainSchedule";
 import ViewTrainSchedules from "./components/TrainManagement/ViewTrainSchedules";
+import EditTrainSchedule from "./components/TrainManagement/EditTrainSchedules";
+import TrainScheduleActivation from "./components/TrainManagement/TrainScheduleactivation";
+import ViewSchedules from "./components/BookingManagement/ViewSchedules";
 
 function App() {
   return (
@@ -27,6 +30,11 @@ function App() {
           //TrainScheduleManagement
           <Route path="/schedule/create" element={<CreateTrainSchedule />} />
           <Route path="/schedule/view" element={<ViewTrainSchedules />} />
+          <Route path="/schedule/edit/:id" element={<EditTrainSchedule />} />
+          <Route path="/schedule/activation" element={<TrainScheduleActivation />} />
+
+          //BookingManagement
+          <Route path="/booking/view" element={<ViewSchedules />} />
         </Routes>
       </Router>
   );
