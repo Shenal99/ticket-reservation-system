@@ -8,12 +8,16 @@ export default function TrainScheduleActivation() {
   const [schedules, setSchedules] = useState([]);
   const [scheduleQuery, setScheduleQuery] = useState("");
 
-//   useEffect(() => {
-//     // Fetch the list of train schedules from your API
-//     axios.get("https://localhost:7173/api/TrainSchedules").then((response) => {
-//       setSchedules(response.data);
-//     });
-//   }, []);
+  useEffect(() => {
+    axios.get("https://localhost:7173/api/Schedule")
+      .then((response) => {
+        console.log("API Response Data:", response.data); // Log the data
+        setSchedules(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching schedules:", error);
+      });
+  }, []);
 
   // Function to activate a train schedule
   const activateSchedule = (id) => {
@@ -54,10 +58,12 @@ export default function TrainScheduleActivation() {
   };
 
   // Filter the train schedules based on the search queries
-  const filteredSchedules = schedules.filter(
+const filteredSchedules = schedules.filter(
     (schedule) =>
-      schedule.name.toLowerCase().includes(scheduleQuery.toLowerCase())
+      schedule.trainName && // Check if schedule.name is defined
+      schedule.trainName.toLowerCase().includes(scheduleQuery.toLowerCase())
   );
+  
 
   return (
     <>
@@ -82,6 +88,7 @@ export default function TrainScheduleActivation() {
             <thead className="thead-dark">
               <tr>
                 <th>Train Name</th>
+                <th>Destination</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -89,7 +96,8 @@ export default function TrainScheduleActivation() {
             <tbody>
               {filteredSchedules.map((schedule) => (
                 <tr key={schedule.id}>
-                  <td>{schedule.name}</td>
+                  <td>{schedule.trainName}</td>
+                  <td>{schedule.startDestination} to {schedule.endDestination}</td>
                   <td>
                     <span
                       className={`status ${schedule.status ? "active" : "inactive"

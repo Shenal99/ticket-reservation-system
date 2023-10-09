@@ -1,196 +1,199 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
-import swal from "sweetalert";
-import "../../res/css/editTrainSchedule.css"; // Import the CSS file
 import NavBar from "./TrainNavBar";
 import CustomAppBar from "../AppBar";
+import Swal from "sweetalert2";
+import { useParams } from "react-router-dom";
+import "../../res/css/createSchedule.css";
 
 export default function EditTrainSchedule() {
-    const { id } = useParams();
-    const [schedule, setSchedule] = useState({
-        name: "",
-        startDestination: "",
-        endDestination: "",
-        startTime: "",
-        endTime: "",
-        date: "",
-        pricePerTicket: 0,
-        seats: 0,
-        status: 0,
-    });
+  const { id } = useParams();
+  const [trainName, setTrainName] = useState("");
+  const [startDestination, setStartDestination] = useState("");
+  const [endDestination, setEndDestination] = useState("");
+  const [stationList, setStationList] = useState([]);
+  const [seats, setSeats] = useState(0);
+  const [scheduleDate, setScheduleDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [isActive, setIsActive] = useState(false);
 
-    //   useEffect(() => {
-    //     axios
-    //       .get(`https://localhost:7173/api/TrainSchedules/${id}`)
-    //       .then((response) => {
-    //         setSchedule(response.data);
-    //       })
-    //       .catch((error) => {
-    //         console.error(error);
-    //       });
-    //   }, [id]);
+  useEffect(() => {
+    // Fetch the existing schedule data by making an API request
+    axios
+      .get(`https://localhost:7173/api/Schedule/get?id=${id}`)
+      .then((response) => {
+        const existingSchedule = response.data;
 
-    function updateSchedule(e) {
-        e.preventDefault();
+        // Update the state with the existing schedule data
+        setTrainName(existingSchedule.trainName);
+        setStartDestination(existingSchedule.startDestination);
+        setEndDestination(existingSchedule.endDestination);
+        setStationList(existingSchedule.stationList);
+        setSeats(existingSchedule.seats);
+        setScheduleDate(existingSchedule.date);
+        setStartTime(existingSchedule.startTime);
+        setIsActive(existingSchedule.status === 1);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [id]);
 
-        axios
-            .put(`https://localhost:7173/api/TrainSchedules/${id}`, schedule)
-            .then((response) => {
-                if (response.status === 200) {
-                    swal({
-                        title: "Success",
-                        text: "Train Schedule Successfully Updated",
-                        icon: "success",
-                        type: "success",
-                    }).then(function () {
-                        // Redirect to the train schedule list or any other desired page
-                        window.location.href = "/train-schedule/view";
-                    });
-                } else {
-                    swal("Train Schedule Update Failed!");
-                }
-            })
-            .catch((error) => {
-                console.error(error);
-                swal("Train Schedule Update Failed!");
-            });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Prepare the data to send to the server
+    const updatedSchedule = {
+      trainName,
+      startDestination,
+      endDestination,
+      stationList,
+      seats,
+      date: scheduleDate,
+      startTime,
+      status: isActive ? 1 : 0,
+    };
+
+    // API endpoint for updating train schedules
+    const apiUrl = `https://localhost:7173/api/Schedule/edit?id=${id}`;
+
+    try {
+      // Send a PUT request to update the schedule
+      const response = await axios.post(apiUrl, updatedSchedule);
+
+      if (response.status === 200) {
+        // Use Swal to show a success message
+        Swal.fire({
+          title: "Success",
+          text: "Train Schedule Successfully Updated",
+          icon: "success",
+        }).then(() => {
+          // Redirect to the desired page
+          window.location.href = "/schedule/view";
+        });
+      } else {
+        Swal.fire("Train Schedule Update Failed!", "Please try again.", "error");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+
+      // Use Swal to show an error message
+      Swal.fire("Train Schedule Update Failed!", "Please try again later.", "error");
     }
+  };
 
-    return (
-        <>
-            <div className="train-background">
-                <CustomAppBar />
-                <NavBar />
-                <div className="container mt-5 edit-train-schedule-container">
-                    <div className="edit-train-schedule-form">
-                        <h2>Edit Train Schedule</h2>
-                        <form onSubmit={updateSchedule}>
-                            <div className="form-group create-train-schedule-form-group">
-                                <label htmlFor="name">Train Name</label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    className="form-control"
-                                    value={schedule.name}
-                                    onChange={(e) =>
-                                        setSchedule({ ...schedule, name: e.target.value })
-                                    }
-                                    required
-                                />
-                            </div>
-                            <div className="form-group create-train-schedule-form-group">
-                                <label htmlFor="startDestination">Start Destination</label>
-                                <input
-                                    type="text"
-                                    name="startDestination"
-                                    className="form-control"
-                                    value={schedule.startDestination}
-                                    onChange={(e) =>
-                                        setSchedule({ ...schedule, startDestination: e.target.value })
-                                    }
-                                    required
-                                />
-                            </div>
-                            <div className="form-group create-train-schedule-form-group">
-                                <label htmlFor="endDestination">End Destination</label>
-                                <input
-                                    type="text"
-                                    name="endDestination"
-                                    className="form-control"
-                                    value={schedule.endDestination}
-                                    onChange={(e) =>
-                                        setSchedule({ ...schedule, endDestination: e.target.value })
-                                    }
-                                    required
-                                />
-                            </div>
-                            <div className="form-group create-train-schedule-form-group">
-                                <label htmlFor="startTime">Start Time</label>
-                                <input
-                                    type="time"
-                                    name="startTime"
-                                    className="form-control"
-                                    value={schedule.startTime}
-                                    onChange={(e) =>
-                                        setSchedule({ ...schedule, startTime: e.target.value })
-                                    }
-                                    required
-                                />
-                            </div>
-                            <div className="form-group create-train-schedule-form-group">
-                                <label htmlFor="endTime">End Time</label>
-                                <input
-                                    type="time"
-                                    name="endTime"
-                                    className="form-control"
-                                    value={schedule.endTime}
-                                    onChange={(e) =>
-                                        setSchedule({ ...schedule, endTime: e.target.value })
-                                    }
-                                    required
-                                />
-                            </div>
-                            <div className="form-group create-train-schedule-form-group">
-                                <label htmlFor="date">Schedule Date</label>
-                                <input
-                                    type="date"
-                                    name="date"
-                                    className="form-control"
-                                    value={schedule.date}
-                                    onChange={(e) =>
-                                        setSchedule({ ...schedule, date: e.target.value })
-                                    }
-                                    required
-                                />
-                            </div>
-                            <div className="form-group create-train-schedule-form-group">
-                                <label htmlFor="pricePerTicket">Price per Ticket</label>
-                                <input
-                                    type="number"
-                                    name="pricePerTicket"
-                                    className="form-control"
-                                    value={schedule.pricePerTicket}
-                                    onChange={(e) =>
-                                        setSchedule({ ...schedule, pricePerTicket: e.target.value })
-                                    }
-                                    required
-                                />
-                            </div>
-                            <div className="form-group create-train-schedule-form-group">
-                                <label htmlFor="seats">Seats</label>
-                                <input
-                                    type="number"
-                                    name="seats"
-                                    className="form-control"
-                                    value={schedule.seats}
-                                    onChange={(e) =>
-                                        setSchedule({ ...schedule, seats: e.target.value })
-                                    }
-                                    required
-                                />
-                            </div>
-                            <div className="form-check mb-3">
-                                <input
-                                    type="checkbox"
-                                    className="form-check-input"
-                                    name="status"
-                                    checked={schedule.status}
-                                    onChange={(e) =>
-                                        setSchedule({ ...schedule, status: e.target.checked ? 1 : 0 })
-                                    }
-                                />
-                                <label className="form-check-label" htmlFor="status">
-                                    Schedule is Active
-                                </label>
-                            </div>
-                            <button type="submit" className="btn btn-primary">
-                                Update Schedule
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </>
-    );
+  return (
+    <>
+      <div className="train-background">
+        <CustomAppBar />
+        <NavBar />
+        <div className="container mt-5 create-train-schedule-container">
+          <div className="create-train-schedule">
+            <h2>Edit Train Schedule</h2>
+            <form onSubmit={handleSubmit}>
+              <div className="form-group create-train-schedule-form-group">
+                <label htmlFor="trainName">Train Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="trainName"
+                  value={trainName}
+                  onChange={(e) => setTrainName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group create-train-schedule-form-group">
+                <label htmlFor="startDestination">Start Destination</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="startDestination"
+                  value={startDestination}
+                  onChange={(e) => setStartDestination(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group create-train-schedule-form-group">
+                <label htmlFor="endDestination">End Destination</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="endDestination"
+                  value={endDestination}
+                  onChange={(e) => setEndDestination(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group create-train-schedule-form-group">
+                <label htmlFor="stationList">Station List</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="stationList"
+                  value={stationList.map((station) => station.name).join(", ")} // Display stationList as a comma-separated string
+                  onChange={(e) => {
+                    const stationNames = e.target.value.split(", ").map((stationName) => stationName.trim());
+                    const stationObjects = stationNames.map((name) => ({ name }));
+                    setStationList(stationObjects);
+                  }}
+                  required
+                />
+              </div>
+              <div className="form-group create-train-schedule-form-group">
+                <label htmlFor="seats">Seats</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  id="seats"
+                  value={seats}
+                  onChange={(e) => setSeats(parseInt(e.target.value))}
+                  required
+                />
+              </div>
+              <div className="form-group create-train-schedule-form-group">
+                <label htmlFor="scheduleDate">Schedule Date</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  id="scheduleDate"
+                  value={scheduleDate}
+                  onChange={(e) => setScheduleDate(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group create-train-schedule-form-group">
+                <label htmlFor="startTime">Start Time</label>
+                <input
+                  type="time"
+                  className="form-control"
+                  id="startTime"
+                  value={startTime}
+                  onChange={(e) => setStartTime(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-check mb-3">
+                <input
+                  type="checkbox"
+                  className="form-check-input"
+                  id="isActive"
+                  checked={isActive}
+                  onChange={(e) => setIsActive(e.target.checked)}
+                />
+                <label className="form-check-label" htmlFor="isActive">
+                  Schedule is Active
+                </label>
+              </div>
+              <button
+                type="submit"
+                className="btn create-train-schedule-btn-primary btn-block"
+              >
+                Update Schedule
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }

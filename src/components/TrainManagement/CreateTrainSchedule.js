@@ -45,7 +45,7 @@ export default function CreateTrainSchedule() {
           icon: "success",
         }).then(() => {
           // Redirect to the desired page
-          window.location.href = "/train-schedule/view";
+          window.location.href = "/schedule/view";
         });
       } else {
         Swal.fire("Train Schedule Creation Failed!", "Please try again.", "error");

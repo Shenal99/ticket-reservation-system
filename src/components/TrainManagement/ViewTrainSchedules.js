@@ -177,7 +177,7 @@ export default function ViewTrainSchedules() {
                       </span>
                     </td>
                     <td>
-                      <Link to={`/train-schedule/edit/${schedule.id}`}>
+                      <Link to={`/schedule/edit/${schedule.id}`}>
                         <FontAwesomeIcon icon={faEdit} className="edit-icon" />
                       </Link>
                       <FontAwesomeIcon
