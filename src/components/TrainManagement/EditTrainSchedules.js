@@ -164,7 +164,7 @@ export default function EditTrainSchedule() {
               <div className="form-group create-train-schedule-form-group">
                 <label htmlFor="startTime">Start Time</label>
                 <input
-                  type="time"
+                  type="text"
                   className="form-control"
                   id="startTime"
                   value={startTime}

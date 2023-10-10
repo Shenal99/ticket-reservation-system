@@ -33,11 +33,6 @@ export default function NavBar() {
                 <i className="fas fa-user-plus"></i> Manage Bookings
               </Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="">
-                <i className="fas fa-user-plus"></i> Activate Booking
-              </Link>
-            </li>
           </ul>
         </div>
       </div>

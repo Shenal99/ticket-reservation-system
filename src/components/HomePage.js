@@ -43,7 +43,7 @@ export default function Home() {
                   <p className="card-text">
                     Manage ticket bookings and reservations.
                   </p>
-                  <Link to="/ticket-booking" className="btn btn-primary">
+                  <Link to="/booking/view" className="btn btn-primary">
                     Go to Ticket Booking
                   </Link>
                 </div>
