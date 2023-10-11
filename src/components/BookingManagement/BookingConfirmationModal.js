@@ -1,38 +1,92 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import Select from "react-select";
+import Swal from "sweetalert2";
 
 export default function BookingConfirmationModal(props) {
-  const [nicNo, setNicNo] = useState("");
+  const [travellerId, setTravellerId] = useState("");
   const [startDestination, setStartDestination] = useState("");
   const [endDestination, setEndDestination] = useState("");
-  const [seatNo, setSeatNo] = useState("");
+  const [numberOfSeats, setNumberOfSeats] = useState("");
+  const [nicList, setNicList] = useState([]);
+
+  useEffect(() => {
+    fetch("https://localhost:7173/api/Traveller")
+      .then((response) => response.json())
+      .then((data) => {
+        const nics = data.map((traveller) => ({
+          value: traveller.id,
+          label: traveller.nic,
+        }));
+        setNicList(nics);
+      })
+      .catch((error) => {
+        console.error("Error fetching NIC numbers:", error);
+      });
+  }, []);
 
   const handleClose = () => {
-    // Reset form fields and close the modal
-    setNicNo("");
+    setTravellerId("");
     setStartDestination("");
     setEndDestination("");
-    setSeatNo("");
+    setNumberOfSeats("");
     props.onClose();
   };
 
   const handleConfirmBooking = () => {
-    // Perform booking confirmation logic here, e.g., send data to the server
     const bookingData = {
-      nicNo,
-      startDestination,
-      endDestination,
-      seatNo,
-      scheduleId: props.scheduleId, // Pass the schedule ID to identify the booking
+      travellerId: travellerId.value,
+      scheduleId: props.scheduleId,
+      reservationStart: startDestination,
+      reservationEnd: endDestination,
+      pax: parseInt(numberOfSeats),
     };
 
-    // Call your API to confirm the booking with bookingData
-    // ...
-
-    // After successful booking, you can display a success message or handle as needed
-
-    // Close the modal
-    handleClose();
+    // Display a confirmation dialog with SweetAlert
+    Swal.fire({
+      title: "Confirm Booking",
+      text: "Are you sure you want to confirm this booking?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Confirm",
+      cancelButtonText: "Cancel",
+    })
+      .then((result) => {
+        if (result.isConfirmed) {
+          // If user confirms, make a POST request to confirm the booking
+          fetch("https://localhost:7173/api/Reservation/create", {
+            method: "POST",
+            headers: {
+              "Accept": "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(bookingData),
+          })
+            .then((response) => {
+              if (response.ok) {
+                // Handle success here with SweetAlert
+                Swal.fire({
+                  title: "Booking Confirmed",
+                  text: "Your booking has been confirmed successfully.",
+                  icon: "success",
+                }).then(() => {
+                  handleClose(); // Close the modal
+                });
+              } else {
+                // Handle error here with SweetAlert
+                Swal.fire("Booking Confirmation Failed", "Please try again later.", "error");
+              }
+            })
+            .catch((error) => {
+              // Handle error here with SweetAlert
+              Swal.fire("Booking Confirmation Failed", "Please try again later.", "error");
+            });
+        }
+      })
+      .catch((error) => {
+        // Handle error with SweetAlert
+        Swal.fire("Error", "An error occurred. Please try again later.", "error");
+      });
   };
 
   return (
@@ -42,15 +96,17 @@ export default function BookingConfirmationModal(props) {
       </Modal.Header>
       <Modal.Body>
         <p>Train Name: {props.trainName}</p>
+        <p>Destination: {props.startDestination} to {props.endDestination}</p>
         <p>Start Time: {props.startTime}</p>
         <Form>
-          <Form.Group controlId="nicNo">
-            <Form.Label>NIC No</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter NIC No"
-              value={nicNo}
-              onChange={(e) => setNicNo(e.target.value)}
+          <Form.Group controlId="travellerId">
+            <Form.Label>Traveller</Form.Label>
+            <Select
+              options={nicList}
+              value={travellerId}
+              onChange={(selectedOption) => setTravellerId(selectedOption)}
+              isSearchable={true}
+              placeholder="Select Traveller"
             />
           </Form.Group>
           <Form.Group controlId="startDestination">
@@ -83,13 +139,13 @@ export default function BookingConfirmationModal(props) {
               ))}
             </Form.Control>
           </Form.Group>
-          <Form.Group controlId="seatNo">
-            <Form.Label>Seat No</Form.Label>
+          <Form.Group controlId="numberOfSeats">
+            <Form.Label>Number of Seats</Form.Label>
             <Form.Control
-              type="text"
-              placeholder="Enter Seat No"
-              value={seatNo}
-              onChange={(e) => setSeatNo(e.target.value)}
+              type="number"
+              placeholder="Enter Number of Seats"
+              value={numberOfSeats}
+              onChange={(e) => setNumberOfSeats(e.target.value)}
             />
           </Form.Group>
         </Form>

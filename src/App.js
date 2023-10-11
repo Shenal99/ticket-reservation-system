@@ -14,6 +14,7 @@ import ViewTrainSchedules from "./components/TrainManagement/ViewTrainSchedules"
 import EditTrainSchedule from "./components/TrainManagement/EditTrainSchedules";
 import TrainScheduleActivation from "./components/TrainManagement/TrainScheduleactivation";
 import ViewSchedules from "./components/BookingManagement/ViewSchedules";
+import ViewBookings from "./components/BookingManagement/ViewBookings";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
 
           //BookingManagement
           <Route path="/booking/view" element={<ViewSchedules />} />
+          <Route path="/booking/management" element={<ViewBookings />} />
         </Routes>
       </Router>
   );

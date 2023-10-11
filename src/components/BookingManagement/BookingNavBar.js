@@ -29,7 +29,7 @@ export default function NavBar() {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="">
+              <Link className="nav-link" to="/booking/management">
                 <i className="fas fa-user-plus"></i> Manage Bookings
               </Link>
             </li>

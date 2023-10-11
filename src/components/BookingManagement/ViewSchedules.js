@@ -162,7 +162,9 @@ export default function ViewSchedules() {
         trainName={selectedSchedule.trainName}
         startTime={selectedSchedule.startTime}
         stationList={selectedSchedule.stationList}
-        date={selectedSchedule.date} // Pass stationList as a prop
+        date={selectedSchedule.date}
+        startDestination={selectedSchedule.startDestination}
+        endDestination={selectedSchedule.endDestination}
       />
       )}
     </>
