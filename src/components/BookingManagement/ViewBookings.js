@@ -12,18 +12,19 @@ export default function ViewBookings() {
   const [bookings, setBookings] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [travelerNics, setTravelerNics] = useState({});
-  const [trainNames, setTrainNames] = useState({});
+  const [trainDetails, setTrainDetails] = useState({});
+  const [dateDetails, setDateDetails] = useState({});
 
   useEffect(() => {
     // Fetch the list of bookings from your API
     axios.get("https://localhost:7173/api/Reservation").then((response) => {
       setBookings(response.data);
 
-      // Fetch and store traveler NICs and train names based on traveler IDs and schedule IDs
+      // Fetch and store traveler NICs and train details based on traveler IDs and schedule IDs
       const travelerIds = response.data.map((booking) => booking.travellerId);
       const scheduleIds = response.data.map((booking) => booking.scheduleId);
       fetchTravelerNics(travelerIds);
-      fetchTrainNames(scheduleIds);
+      fetchTrainDetails(scheduleIds);
     });
   }, []);
 
@@ -44,56 +45,78 @@ export default function ViewBookings() {
     });
   };
 
-  const fetchTrainNames = (scheduleIds) => {
+  const fetchTrainDetails = (scheduleIds) => {
     scheduleIds.forEach((scheduleId) => {
       axios
         .get(`https://localhost:7173/api/Schedule/get?id=${scheduleId}`)
         .then((response) => {
-          // Store the train name in the state
-          setTrainNames((prevNames) => ({
-            ...prevNames,
-            [scheduleId]: response.data.trainName,
+          // Store the train details (including date) in the state
+          const trainDetails = {
+            trainName: response.data.trainName,
+            date: response.data.date, // Modify this line to match the actual date field in your API response
+          };
+          setTrainDetails((prevDetails) => ({
+            ...prevDetails,
+            [scheduleId]: trainDetails,
           }));
         })
         .catch((error) => {
-          console.error("Error fetching train name:", error);
+          console.error("Error fetching train details:", error);
         });
     });
   };
 
-  const handleCancelReservation = (id) => {
-    // Use SweetAlert for cancellation confirmation
-    swal({
-      title: "Are you sure?",
-      text: "Once canceled, this reservation will be removed!",
-      icon: "warning",
-      buttons: ["Cancel", "Cancel Reservation"],
-      dangerMode: true,
-    }).then((willCancel) => {
-      if (willCancel) {
-        // User confirmed cancellation, send DELETE request
-        axios
-          .delete(`https://localhost:7173/api/Reservation/delete?id=${id}`)
-          .then(() => {
-            // Remove the canceled booking from the state
-            setBookings((prevBookings) =>
-              prevBookings.filter((booking) => booking.id !== id)
-            );
+  const handleCancelReservation = (id, scheduleId) => {
+    // Fetch the schedule details based on the scheduleId
+    axios.get(`https://localhost:7173/api/Schedule/get?id=${scheduleId}`)
+      .then((response) => {
+        const scheduleDate = new Date(response.data.date); // Assuming the date is a valid ISO date string
 
-            swal("Reservation has been canceled!", {
-              icon: "success",
-            });
-          })
-          .catch((error) => {
-            console.error("Error canceling reservation:", error);
-            swal("Error canceling reservation!", {
-              icon: "error",
-            });
+        const currentDate = new Date();
+        const dateDifference = Math.floor((scheduleDate - currentDate) / (1000 * 60 * 60 * 24)); // Calculate the date difference in days
+
+        if (dateDifference <= 5) {
+          swal("Cannot Cancel Reservation", "The schedule date is within 5 days from today.", {
+            icon: "warning",
           });
-      } else {
-        swal("Reservation was not canceled.");
-      }
-    });
+        } else {
+          // Use SweetAlert for cancellation confirmation
+          swal({
+            title: "Are you sure?",
+            text: "Once canceled, this reservation will be removed!",
+            icon: "warning",
+            buttons: ["Cancel", "Cancel Reservation"],
+            dangerMode: true,
+          }).then((willCancel) => {
+            if (willCancel) {
+              // User confirmed cancellation, send DELETE request
+              axios
+                .delete(`https://localhost:7173/api/Reservation/delete?id=${id}`)
+                .then(() => {
+                  // Remove the canceled booking from the state
+                  setBookings((prevBookings) =>
+                    prevBookings.filter((booking) => booking.id !== id)
+                  );
+
+                  swal("Reservation has been canceled!", {
+                    icon: "success",
+                  });
+                })
+                .catch((error) => {
+                  console.error("Error canceling reservation:", error);
+                  swal("Error canceling reservation!", {
+                    icon: "error",
+                  });
+                });
+            } else {
+              swal("Reservation was not canceled.");
+            }
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching schedule details:", error);
+      });
   };
 
   // Filter the bookings based on the traveler NIC
@@ -128,6 +151,7 @@ export default function ViewBookings() {
               <tr>
                 <th>Traveler NIC</th>
                 <th>Train Name</th>
+                <th>Date</th>
                 <th>Reservation Start</th>
                 <th>Reservation End</th>
                 <th>Number of Seats</th>
@@ -138,13 +162,14 @@ export default function ViewBookings() {
               {filteredBookings.map((booking) => (
                 <tr key={booking.id}>
                   <td>{travelerNics[booking.travellerId]}</td>
-                  <td>{trainNames[booking.scheduleId]}</td>
+                  <td>{trainDetails[booking.scheduleId]?.trainName}</td>
+                  <td>{trainDetails[booking.scheduleId]?.date}</td>
                   <td>{booking.reservationStart}</td>
                   <td>{booking.reservationEnd}</td>
                   <td>{booking.pax}</td>
                   <td>
                     <button
-                      onClick={() => handleCancelReservation(booking.id)}
+                      onClick={() => handleCancelReservation(booking                      .id, booking.scheduleId)}
                       className="btn btn-danger"
                     >
                       Cancel Reservation
@@ -162,3 +187,4 @@ export default function ViewBookings() {
     </>
   );
 }
+

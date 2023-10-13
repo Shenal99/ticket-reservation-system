@@ -81,7 +81,7 @@ export default function EditBooking() {
       })
       .catch((error) => {
         console.error(error);
-        swal("Reservation Update Failed!");
+        swal("Cannot Upadate Reservation", "The schedule date is within 5 days from today.", {icon: "warning"});
       });
   }
 
