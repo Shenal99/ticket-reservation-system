@@ -32,7 +32,7 @@ export default function ViewTravelers() {
       if (willDelete) {
         // User confirmed deletion, send DELETE request
         axios
-          .delete(`https://localhost:7173/api/Traveller/${id}`)
+          .delete(`https://localhost:7173/api/Traveller/delete?id=${id}`)
           .then(() => {
             // Remove the deleted traveler from the state
             setTravelers((prevTravelers) =>

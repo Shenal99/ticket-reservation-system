@@ -42,6 +42,42 @@ export default function EditTrainSchedule() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Add input validation
+    if (
+      !trainName ||
+      !startDestination ||
+      !endDestination ||
+      stationList.length === 0 ||
+      seats <= 0 ||
+      !scheduleDate ||
+      !startTime
+    ) {
+      Swal.fire("Missing Information", "Please fill out all fields.", "error");
+      return;
+    }
+
+    // Validate station names
+    for (const station of stationList) {
+      if (!station.name) {
+        Swal.fire("Invalid Station Name", "Please enter valid station names.", "error");
+        return;
+      }
+    }
+
+    // Validate the seats value
+    if (isNaN(seats) || seats <= 0) {
+      Swal.fire("Invalid Number of Seats", "Please enter a valid number of seats.", "error");
+      return;
+    }
+
+    // Validate scheduleDate and startTime formats (customize as needed)
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    const timeRegex = /^\d{2}:\d{2}$/;
+    if (!dateRegex.test(scheduleDate) || !timeRegex.test(startTime)) {
+      Swal.fire("Invalid Date or Time Format", "Please enter valid date and time formats.", "error");
+      return;
+    }
+
     // Prepare the data to send to the server
     const updatedSchedule = {
       trainName,
@@ -153,7 +189,7 @@ export default function EditTrainSchedule() {
               <div className="form-group create-train-schedule-form-group">
                 <label htmlFor="scheduleDate">Schedule Date</label>
                 <input
-                  type="date"
+                  type="date" // Use type="date" for date input
                   className="form-control"
                   id="scheduleDate"
                   value={scheduleDate}
@@ -164,7 +200,7 @@ export default function EditTrainSchedule() {
               <div className="form-group create-train-schedule-form-group">
                 <label htmlFor="startTime">Start Time</label>
                 <input
-                  type="text"
+                  type="text" // Use type="text" for time input
                   className="form-control"
                   id="startTime"
                   value={startTime}
@@ -197,3 +233,4 @@ export default function EditTrainSchedule() {
     </>
   );
 }
+

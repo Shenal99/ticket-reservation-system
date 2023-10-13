@@ -24,7 +24,7 @@ export default function CustomAppBar() {
         // User confirmed logout, implement your logout logic here
         // For example, you can clear user session or token
         // Redirect the user to the login page
-        window.location.href = "/"; // Replace with your login page route
+        window.location.href = "/login"; // Replace with your login page route
       }
     });
   };

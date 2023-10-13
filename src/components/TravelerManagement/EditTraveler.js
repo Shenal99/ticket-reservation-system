@@ -31,6 +31,12 @@ export default function EditTraveler() {
   function updateTraveler(e) {
     e.preventDefault();
 
+    // Add input validation
+    if (!traveler.name || !traveler.nic || !traveler.email || !traveler.phone || !traveler.pwrd) {
+      swal("Missing Information", "Please fill out all fields.", "error");
+      return;
+    }
+
     axios
       .post(`https://localhost:7173/api/Traveller/edit?id=${id}`, traveler)
       .then((response) => {
@@ -56,79 +62,83 @@ export default function EditTraveler() {
 
   return (
     <>
-      <CustomAppBar />
-      <NavBar />
-      <div className="create-traveler-container">
-        <div className="create-traveler-form">
-          <h2>Edit Traveler</h2>
-          <form onSubmit={updateTraveler}>
-            <div className="form-group">
-              <label htmlFor="name">Name</label>
-              <input
-                type="text"
-                name="name"
-                className="form-control"
-                value={traveler.name}
-                onChange={(e) =>
-                  setTraveler({ ...traveler, name: e.target.value })
-                }
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="nic">NIC</label>
-              <input
-                type="text"
-                name="nic"
-                className="form-control"
-                value={traveler.nic}
-                onChange={(e) =>
-                  setTraveler({ ...traveler, nic: e.target.value })
-                }
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                name="email"
-                className="form-control"
-                value={traveler.email}
-                onChange={(e) =>
-                  setTraveler({ ...traveler, email: e.target.value })
-                }
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="phone">Phone</label>
-              <input
-                type="text"
-                name="phone"
-                className="form-control"
-                value={traveler.phone}
-                onChange={(e) =>
-                  setTraveler({ ...traveler, phone: e.target.value })
-                }
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                type="text"
-                name="password"
-                className="form-control"
-                value={traveler.pwrd}
-                onChange={(e) =>
-                  setTraveler({ ...traveler, pwrd: e.target.value })
-                }
-                required
-              />
-            </div>
-            <button type="submit" className="btn btn-primary">Update Traveler</button>
-          </form>
+      <div className="train-background">
+        <CustomAppBar />
+        <NavBar />
+        <div className="create-traveler-container">
+          <div className="create-traveler-form">
+            <h2>Edit Traveler</h2>
+            <form onSubmit={updateTraveler}>
+              <div className="form-group">
+                <label htmlFor="name">Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  className="form-control"
+                  value={traveler.name}
+                  onChange={(e) =>
+                    setTraveler({ ...traveler, name: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="nic">NIC</label>
+                <input
+                  type="text"
+                  name="nic"
+                  className="form-control"
+                  value={traveler.nic}
+                  onChange={(e) =>
+                    setTraveler({ ...traveler, nic: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="email">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  className="form-control"
+                  value={traveler.email}
+                  onChange={(e) =>
+                    setTraveler({ ...traveler, email: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="phone">Phone</label>
+                <input
+                  type="tel" // Use type="tel" for phone input
+                  name="phone"
+                  className="form-control"
+                  value={traveler.phone}
+                  onChange={(e) =>
+                    setTraveler({ ...traveler, phone: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <input
+                  type="password" // Use type="password" for password input
+                  name="password"
+                  className="form-control"
+                  value={traveler.pwrd}
+                  onChange={(e) =>
+                    setTraveler({ ...traveler, pwrd: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <button type="submit" className="btn btn-primary">
+                Update Traveler
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </>

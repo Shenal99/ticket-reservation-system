@@ -34,12 +34,24 @@ export default function BookingConfirmationModal(props) {
   };
 
   const handleConfirmBooking = () => {
+    if (isNaN(numberOfSeats)) {
+      Swal.fire("Invalid Input", "Number of seats must be a valid number.", "error");
+      return;
+    }
+
+    const seats = parseInt(numberOfSeats);
+
+    if (seats < 1 || seats > 4) {
+      Swal.fire("Invalid Input", "Number of seats must be between 1 and 4.", "error");
+      return;
+    }
+
     const bookingData = {
       travellerId: travellerId.value,
       scheduleId: props.scheduleId,
       reservationStart: startDestination,
       reservationEnd: endDestination,
-      pax: parseInt(numberOfSeats),
+      pax: seats,
     };
 
     // Display a confirmation dialog with SweetAlert
@@ -53,7 +65,7 @@ export default function BookingConfirmationModal(props) {
     })
       .then((result) => {
         if (result.isConfirmed) {
-          // If user confirms, make a POST request to confirm the booking
+          // If the user confirms, make a POST request to confirm the booking
           fetch("https://localhost:7173/api/Reservation/create", {
             method: "POST",
             headers: {
@@ -161,3 +173,4 @@ export default function BookingConfirmationModal(props) {
     </Modal>
   );
 }
+

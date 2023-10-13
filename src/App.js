@@ -15,14 +15,20 @@ import EditTrainSchedule from "./components/TrainManagement/EditTrainSchedules";
 import TrainScheduleActivation from "./components/TrainManagement/TrainScheduleactivation";
 import ViewSchedules from "./components/BookingManagement/ViewSchedules";
 import ViewBookings from "./components/BookingManagement/ViewBookings";
+import EditBooking from "./components/BookingManagement/EditBooking";
+import RegistrationPage from "./components/Register";
+import StartupPage from "./components/StartupPage";
 
 function App() {
   return (
       <Router>
         <Routes>
-          //TravelerManagement
-          <Route path="/" element={<LoginPage />} />
+          <Route path="/" element={<StartupPage />} />
+          <Route path="/register" element={<RegistrationPage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/home" element={<HomePage />} />
+
+          //TravelerManagement
           <Route path="/traveler/create" element={<CreateTraveler />} />
           <Route path="/traveler/view" element={<ViewTravelers />} />
           <Route path="/traveler/edit/:id" element={<EditTraveler />} />
@@ -37,6 +43,7 @@ function App() {
           //BookingManagement
           <Route path="/booking/view" element={<ViewSchedules />} />
           <Route path="/booking/management" element={<ViewBookings />} />
+          <Route path="/booking/edit/:id" element={<EditBooking />} />
         </Routes>
       </Router>
   );

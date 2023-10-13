@@ -1,41 +1,47 @@
 import React, { useState } from "react";
 import axios from "axios";
 import swal from "sweetalert";
+import { Link } from "react-router-dom"; // Import Link from React Router
 import "../res/css/login.css";
 
 export default function LoginPage() {
   const [uname, setUname] = useState("");
   const [pwrd, setPwrd] = useState("");
+  const [error, setError] = useState(""); // Add error state for input validation
 
   function loginUser() {
+    setError(""); // Clear any previous error messages
+
+    // Input validation
+    if (!uname || !pwrd) {
+      setError("Please fill in both fields.");
+      return;
+    }
+
     const data = {
       username: uname,
-      password: pwrd
+      password: pwrd,
     };
 
     axios
       .post("https://localhost:7173/api/User/login", data, {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
       .then((response) => {
         if (response.status === 200) {
           if (response.data.status === 1) {
             swal("Login Successful", "You are now logged in!", "success").then(
               function () {
-                // Redirect to the dashboard or desired page based on user role
-                if (response.data.role === 1) {
-                  window.location.href = "/home";
-                } else if (response.data.role === 1) {
-                  window.location.href = "/home";
-                } else {
-                  // Handle other roles as needed
-                }
+                // Store the user's role in localStorage
+                localStorage.setItem("userRole", response.data.role);
+
+                window.location.href = "/home";
               }
             );
           } else {
-            swal("Login Failed", "User account is not active", "error");
+            swal("Login Failed", "Invalid Username or Password", "error");
           }
         } else {
           swal("Login Failed", response.data, "error");
@@ -58,7 +64,6 @@ export default function LoginPage() {
                   className="fas fa-crow fa-2x me-3 pt-5 mt-xl-4"
                   style={{ color: "#709085" }}
                 ></div>
-                {/* <img src="../res/images/logo5.png" /> */}
               </div>
 
               <div className="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
@@ -93,6 +98,8 @@ export default function LoginPage() {
                     </label>
                   </div>
 
+                  {error && <p className="text-danger">{error}</p>} {/* Display error message if input is not valid */}
+
                   <div className="pt-1 mb-4">
                     <button
                       className="btn btn-info btn-lg btn-block"
@@ -103,7 +110,11 @@ export default function LoginPage() {
                     </button>
                   </div>
 
-                  <p className="small mb-5 pb-lg-2">
+                  <p className="small mb-2">
+                    Don't have an account? <Link to="/register">Register here</Link>
+                  </p>
+
+                  <p className="small">
                     <a className="text-muted" href="#!">
                       Forgot password?
                     </a>

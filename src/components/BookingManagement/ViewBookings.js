@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import NavBar from "./BookingNavBar";
 import CustomAppBar from "../AppBar";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import swal from "sweetalert";
+import "../../res/css/viewBookings.css";
 
 export default function ViewBookings() {
   const [bookings, setBookings] = useState([]);
@@ -147,6 +149,9 @@ export default function ViewBookings() {
                     >
                       Cancel Reservation
                     </button>
+                    <Link to={`/booking/edit/${booking.id}`}>
+                      <FontAwesomeIcon icon={faEdit} className="edit-icon1" />
+                    </Link>
                   </td>
                 </tr>
               ))}

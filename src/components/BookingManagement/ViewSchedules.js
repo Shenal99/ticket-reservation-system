@@ -37,12 +37,25 @@ export default function ViewSchedules() {
     }
   };
 
-  const filteredSchedules = schedules.filter(
-    (schedule) =>
+  const activeStatus = 1;
+
+  // Filter the schedules based on the date, start, and end queries and the active status
+  const filteredSchedules = schedules.filter((schedule) => {
+    return (
       schedule.date.toLowerCase().includes(dateQuery.toLowerCase()) &&
-      schedule.startDestination.toLowerCase().includes(startQuery.toLowerCase()) &&
-      schedule.endDestination.toLowerCase().includes(endQuery.toLowerCase())
-  );
+      (schedule.stationList.find(station => station.name.toLowerCase().includes(startQuery.toLowerCase())) ||
+        schedule.startDestination.toLowerCase().includes(startQuery.toLowerCase())) &&
+      (schedule.stationList.find(station => station.name.toLowerCase().includes(endQuery.toLowerCase())) ||
+        schedule.endDestination.toLowerCase().includes(endQuery.toLowerCase())) &&
+      schedule.status === activeStatus
+    );
+  });
+
+  const handleReset = () => {
+    setDateQuery("");
+    setStartQuery("");
+    setEndQuery("");
+  };
 
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState(null);
@@ -64,7 +77,7 @@ export default function ViewSchedules() {
           >
             <h2>View Train Schedules</h2>
             <div className="row">
-              <div className="col-md-4">
+              <div className="col-md-3">
                 <input
                   type="date"
                   className="form-control small-input"
@@ -73,7 +86,7 @@ export default function ViewSchedules() {
                   onChange={(e) => setDateQuery(e.target.value)}
                 />
               </div>
-              <div className="col-md-4">
+              <div className="col-md-3">
                 <input
                   type="text"
                   className="form-control small-input"
@@ -82,7 +95,7 @@ export default function ViewSchedules() {
                   onChange={(e) => setStartQuery(e.target.value)}
                 />
               </div>
-              <div className="col-md-4">
+              <div className="col-md-3">
                 <input
                   type="text"
                   className="form-control small-input"
@@ -91,7 +104,16 @@ export default function ViewSchedules() {
                   onChange={(e) => setEndQuery(e.target.value)}
                 />
               </div>
+              <div className="col-md-3">
+                <button
+                  className="btn btn-secondary"
+                  onClick={handleReset}
+                >
+                  Reset
+                </button>
+              </div>
             </div>
+
             <table className="table table-striped">
               <thead className="thead-dark">
                 <tr>
@@ -156,16 +178,16 @@ export default function ViewSchedules() {
       {/* Render the booking confirmation modal */}
       {selectedSchedule && (
         <BookingConfirmationModal
-        show={showBookingModal}
-        onClose={() => setShowBookingModal(false)}
-        scheduleId={selectedSchedule.id}
-        trainName={selectedSchedule.trainName}
-        startTime={selectedSchedule.startTime}
-        stationList={selectedSchedule.stationList}
-        date={selectedSchedule.date}
-        startDestination={selectedSchedule.startDestination}
-        endDestination={selectedSchedule.endDestination}
-      />
+          show={showBookingModal}
+          onClose={() => setShowBookingModal(false)}
+          scheduleId={selectedSchedule.id}
+          trainName={selectedSchedule.trainName}
+          startTime={selectedSchedule.startTime}
+          stationList={selectedSchedule.stationList}
+          date={selectedSchedule.date}
+          startDestination={selectedSchedule.startDestination}
+          endDestination={selectedSchedule.endDestination}
+        />
       )}
     </>
   );

@@ -16,6 +16,26 @@ export default function CreateTraveler() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Add input validation
+    if (!name || !nic || !email || !phone || !password) {
+      Swal.fire("Missing Information", "Please fill out all fields.", "error");
+      return;
+    }
+
+    // Validate email using a regular expression
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Swal.fire("Invalid Email", "Please enter a valid email address.", "error");
+      return;
+    }
+
+    // Validate NIC format (customize as needed)
+    const nicRegex = /^[0-9]{9}[vVxX]$/;
+    if (!nicRegex.test(nic)) {
+      Swal.fire("Invalid NIC", "Please enter a valid NIC.", "error");
+      return;
+    }
+
     try {
       const response = await axios.post("https://localhost:7173/api/Traveller/register", {
         name,
@@ -57,83 +77,85 @@ export default function CreateTraveler() {
 
   return (
     <>
-      <CustomAppBar />
-      <NavBar />
-      <div className="create-traveler-container">
-        <div className="create-traveler-form">
-          <h2>Create Traveler Profile</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="name">Name</label>
-              <input
-                type="text"
-                className="form-control"
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="nic">NIC (National Identification Card)</label>
-              <input
-                type="text"
-                className="form-control"
-                id="nic"
-                value={nic}
-                onChange={(e) => setNic(e.target.value)}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="contact">Email</label>
-              <input
-                type="text"
-                className="form-control"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="phone">Phone</label>
-              <input
-                type="text"
-                className="form-control"
-                id="phone"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                className="form-control"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="isActive">Traveler Status</label>
-              <select
-                className="form-control"
-                id="isActive"
-                value={isActive}
-                onChange={(e) => setIsActive(e.target.value)}
-              >
-                <option value={true}>Active</option>
-                <option value={false}>Inactive</option>
-              </select>
-            </div>
-            <button type="submit" className="btn btn-primary">
-              Create
-            </button>
-          </form>
+      <div className="train-background">
+        <CustomAppBar />
+        <NavBar />
+        <div className="create-traveler-container">
+          <div className="create-traveler-form">
+            <h2>Create Traveler Profile</h2>
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label htmlFor="name">Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="nic">NIC (National Identification Card)</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="nic"
+                  value={nic}
+                  onChange={(e) => setNic(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="contact">Email</label>
+                <input
+                  type="email"  // Use type="email" for email input
+                  className="form-control"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="phone">Phone</label>
+                <input
+                  type="tel"  // Use type="tel" for phone input
+                  className="form-control"
+                  id="phone"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <input
+                  type="password"
+                  className="form-control"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="isActive">Traveler Status</label>
+                <select
+                  className="form-control"
+                  id="isActive"
+                  value={isActive}
+                  onChange={(e) => setIsActive(e.target.value)}
+                >
+                  <option value={true}>Active</option>
+                  <option value={false}>Inactive</option>
+                </select>
+              </div>
+              <button type="submit" className="btn btn-primary">
+                Create
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </>

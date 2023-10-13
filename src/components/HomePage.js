@@ -1,16 +1,26 @@
-import React from "react";
-import { Link } from "react-router-dom"; // If using React Router for navigation
-import "../res/css/home.css"; // Customize your home screen CSS
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import "../res/css/home.css";
 import CustomAppBar from "./AppBar";
 
 export default function Home() {
-  const imageSize = { height: "400px" }
+  const imageSize = { height: "400px" };
+  const [userRole, setUserRole] = useState(0);
+
+  useEffect(() => {
+    // Retrieve the user's role from localStorage
+    const storedUserRole = localStorage.getItem("userRole");
+    if (storedUserRole) {
+      setUserRole(parseInt(storedUserRole, 10));
+    }
+  }, []);
+
   return (
     <>
       <div className="train-background">
-        <CustomAppBar /> {/* Include the AppBar */}
+        <CustomAppBar />
         <div className="container mt-5">
-          <div className="row">
+          <div className="row justify-content-center">
             <div className="col-md-4">
               <div className="card mb-4">
                 <img
@@ -49,25 +59,27 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="col-md-4">
-              <div className="card mb-4">
-                <img
-                  src={require("../res/images/trainF.jpg")}
-                  alt="Train Management"
-                  className="card-img-top"
-                  style={imageSize}
-                />
-                <div className="card-body">
-                  <h5 className="card-title">Train Management</h5>
-                  <p className="card-text">
-                    Manage train schedules and information.
-                  </p>
-                  <Link to="/schedule/create" className="btn btn-primary">
-                    Go to Train Management
-                  </Link>
+            {userRole === 1 && (
+              <div className="col-md-4">
+                <div className="card mb-4">
+                  <img
+                    src={require("../res/images/trainF.jpg")}
+                    alt="Train Management"
+                    className="card-img-top"
+                    style={imageSize}
+                  />
+                  <div className="card-body">
+                    <h5 className="card-title">Train Management</h5>
+                    <p className="card-text">
+                      Manage train schedules and information.
+                    </p>
+                    <Link to="/schedule/create" className="btn btn-primary">
+                      Go to Train Management
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

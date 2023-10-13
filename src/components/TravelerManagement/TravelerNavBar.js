@@ -1,9 +1,10 @@
-// NavBar.js
 import React from "react";
-import { Link } from "react-router-dom"; // If you're using React Router for navigation
-import "../../res/css/NavBar.css"; // Import custom CSS for styling
+import { Link } from "react-router-dom";
+import "../../res/css/NavBar.css";
 
 export default function NavBar() {
+  const userRole = localStorage.getItem("userRole"); // Retrieve user role from localStorage
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container">
@@ -33,11 +34,13 @@ export default function NavBar() {
                 <i className="fas fa-user-plus"></i> View Travelers
               </Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/traveler/activation">
-                <i className="fas fa-user-plus"></i> Account Activation
-              </Link>
-            </li>
+            {userRole === "1" && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/traveler/activation">
+                  <i className="fas fa-user-plus"></i> Account Activation
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
       </div>
