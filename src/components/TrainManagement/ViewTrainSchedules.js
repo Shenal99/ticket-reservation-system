@@ -39,7 +39,7 @@ export default function ViewTrainSchedules() {
         // User confirmed deletion, send DELETE request to your API
         axios
           .delete(`https://localhost:7173/api/Schedule/${id}`)
-          .then(() => {
+          .then((res) => {
             // Remove the deleted schedule from the state
             setSchedules((prevSchedules) =>
               prevSchedules.filter((schedule) => schedule.id !== id)
@@ -51,7 +51,7 @@ export default function ViewTrainSchedules() {
           })
           .catch((error) => {
             console.error("Error deleting schedule:", error);
-            swal("Error deleting schedule!", {
+            swal("Error deleting schedule already have reservations!", {
               icon: "error",
             });
           });

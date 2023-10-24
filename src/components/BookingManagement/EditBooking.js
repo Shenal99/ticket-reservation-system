@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import swal from "sweetalert";
+import Swal from "sweetalert2";
 import "../../res/css/createSchedule.css";
 import NavBar from "./BookingNavBar";
 import CustomAppBar from "../AppBar";
@@ -62,6 +63,17 @@ export default function EditBooking() {
   function updateReservation(e) {
     e.preventDefault();
 
+    if (isNaN(reservation.pax)) {
+      Swal.fire("Invalid Input", "Number of seats must be a valid number.", "error");
+      return;
+    }
+
+    const seats = parseInt(reservation.pax);
+
+    if (seats < 1 || seats > 4) {
+      Swal.fire("Invalid Input", "Number of seats must be between 1 and 4.", "error");
+      return;
+    }
     axios
       .post(`https://localhost:7173/api/Reservation/edit?id=${id}`, reservation)
       .then((response) => {
@@ -73,7 +85,7 @@ export default function EditBooking() {
             type: "success",
           }).then(function () {
             // Redirect to the reservation list or any other desired page
-            window.location.href = "/reservation/view";
+            window.location.href = "/booking/management";
           });
         } else {
           swal("Reservation Update Failed!");

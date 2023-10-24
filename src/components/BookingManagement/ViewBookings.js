@@ -119,12 +119,19 @@ export default function ViewBookings() {
       });
   };
 
-  // Filter the bookings based on the traveler NIC
+  // Filter the bookings based on the traveler NIC and the schedule date
+  const currentDate = new Date();
   const filteredBookings = bookings.filter((booking) => {
     // Check if traveler NIC is not null or undefined and contains the search query
+    if (!travelerNics[booking.travellerId]) return false;
+
+    const scheduleId = booking.scheduleId;
+    if (!trainDetails[scheduleId]) return false;
+
+    const scheduleDate = new Date(trainDetails[scheduleId].date);
     return (
-      travelerNics[booking.travellerId] &&
-      travelerNics[booking.travellerId].toLowerCase().includes(searchQuery.toLowerCase())
+      travelerNics[booking.travellerId].toLowerCase().includes(searchQuery.toLowerCase()) &&
+      scheduleDate >= currentDate
     );
   });
 
@@ -169,7 +176,7 @@ export default function ViewBookings() {
                   <td>{booking.pax}</td>
                   <td>
                     <button
-                      onClick={() => handleCancelReservation(booking                      .id, booking.scheduleId)}
+                      onClick={() => handleCancelReservation(booking.id, booking.scheduleId)}
                       className="btn btn-danger"
                     >
                       Cancel Reservation
@@ -187,4 +194,3 @@ export default function ViewBookings() {
     </>
   );
 }
-

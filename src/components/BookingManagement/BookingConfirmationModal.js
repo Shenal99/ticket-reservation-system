@@ -85,8 +85,9 @@ export default function BookingConfirmationModal(props) {
                   handleClose(); // Close the modal
                 });
               } else {
+                console.log(response);
                 // Handle error here with SweetAlert
-                Swal.fire("Booking Confirmation Failed", "Please try again later.", "error");
+                Swal.fire("Booking Confirmation Failed","Reservation limit exceeded for the train", "error");
               }
             })
             .catch((error) => {

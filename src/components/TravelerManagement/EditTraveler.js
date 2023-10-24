@@ -87,6 +87,7 @@ export default function EditTraveler() {
                 <input
                   type="text"
                   name="nic"
+                  disabled
                   className="form-control"
                   value={traveler.nic}
                   onChange={(e) =>
